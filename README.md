@@ -18,6 +18,8 @@ This is a comprehensive property price prediction and market analysis system bui
   - Price per Square Foot
   - Median Price
   - Price Range
+  - ![Screenshot 2025-05-04 105357](https://github.com/user-attachments/assets/6ed5e06f-76a7-4123-913c-e68fe6108373)
+
 
 ### 2. Interactive Map
 - **Property Location Visualization**:
@@ -29,6 +31,8 @@ This is a comprehensive property price prediction and market analysis system bui
   - Number of Bedrooms
   - Property Type
   - Location
+  - ![Screenshot 2025-05-04 105233](https://github.com/user-attachments/assets/e67fbbbd-2bfb-4c43-8dae-70e14b09efc9)
+
 
 ### 3. Price Prediction
 - **Smart Price Estimation**:
@@ -40,6 +44,8 @@ This is a comprehensive property price prediction and market analysis system bui
     - Number of Bedrooms
     - Number of Bathrooms
     - Property Type
+    - ![Screenshot 2025-05-04 105628](https://github.com/user-attachments/assets/8b58657a-c6ea-4682-93ff-c73ed045cef3)
+
 
 ## Technical Stack
 - **Backend**: Flask (Python)

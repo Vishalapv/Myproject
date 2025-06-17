@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Real Estate Price Predictor{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 mb-4">Predict Real Estate Prices with Confidence</h1>
+        <p class="lead mb-4">Our advanced model helps you estimate property values accurately</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="prediction-card">
+                <h3 class="mb-4">Get Your Price Prediction</h3>
+                <form id="predictionForm">
+                    <div class="mb-3">
+                        <label for="area" class="form-label">Area (sq ft)</label>
+                        <input type="number" class="form-control" id="area" name="area" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bedrooms" class="form-label">Number of Bedrooms</label>
+                        <input type="number" class="form-control" id="bedrooms" name="bedrooms" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bathrooms" class="form-label">Number of Bathrooms</label>
+                        <input type="number" class="form-control" id="bathrooms" name="bathrooms" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <select class="form-select" id="location" name="location" required>
+                            <option value="">Select Location</option>
+                            <!-- Locations will be populated dynamically -->
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Predict Price</button>
+                </form>
+                <div id="predictionResult" class="mt-4" style="display: none;">
+                    <h4>Estimated Price: <span id="predictedPrice" class="text-primary"></span></h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-map-fill display-4 mb-3 text-primary"></i>
+                            <h5 class="card-title">Property Map</h5>
+                            <p class="card-text">Explore properties on an interactive map with detailed information.</p>
+                            <a href="/map" class="btn btn-outline-primary">View Map</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-graph-up display-4 mb-3 text-primary"></i>
+                            <h5 class="card-title">Market Analysis</h5>
+                            <p class="card-text">View price distributions and market trends in your area.</p>
+                            <a href="/price_distribution" class="btn btn-outline-primary">View Analysis</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch locations from the server
+    fetch('/locations')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const locationSelect = document.getElementById('location');
+                data.locations.forEach(location => {
+                    const option = document.createElement('option');
+                    option.value = location;
+                    option.textContent = location;
+                    locationSelect.appendChild(option);
+                });
+            } else {
+                console.error('Failed to fetch locations:', data.error);
+                alert('Failed to load locations. Please refresh the page.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching locations:', error);
+            alert('Failed to load locations. Please refresh the page.');
+        });
+
+    // Handle form submission
+    document.getElementById('predictionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitForm();
+    });
+});
+
+function submitForm() {
+    const form = document.getElementById('predictionForm');
+    const formData = new FormData(form);
+    
+    // Show loading state
+    const resultDiv = document.getElementById('predictionResult');
+    resultDiv.innerHTML = '<div class="alert alert-info">Processing your request...</div>';
+    resultDiv.style.display = 'block';
+    
+    fetch('/predict', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            resultDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <h4>Predicted Price: ${data.prediction}</h4>
+                </div>
+            `;
+        } else {
+            resultDiv.innerHTML = `
+                <div class="alert alert-danger">
+                    <h4>Error: ${data.error}</h4>
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = `
+            <div class="alert alert-danger">
+                <h4>Error: ${error.message}</h4>
+            </div>
+        `;
+    });
+}
+</script>
+{% endblock %} 

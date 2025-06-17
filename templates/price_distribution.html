@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block title %}Market Analysis - Real Estate Price Predictor{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 mb-4">Market Analysis</h1>
+        <p class="lead mb-4">Explore property price distributions and trends across Chennai</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Market Overview Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="stat-icon mb-3">
+                        <i class="bi bi-house-door"></i>
+                    </div>
+                    <h3 class="text-primary">{{ stats.total_properties|int|format_number }}</h3>
+                    <p class="text-muted mb-0">Total Properties</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="stat-icon mb-3">
+                        <i class="bi bi-currency-rupee"></i>
+                    </div>
+                    <h3 class="text-primary">₹{{ stats.average_price|int|format_number }}</h3>
+                    <p class="text-muted mb-0">Average Price</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="stat-icon mb-3">
+                        <i class="bi bi-rulers"></i>
+                    </div>
+                    <h3 class="text-primary">{{ stats.average_area|int|format_number }}</h3>
+                    <p class="text-muted mb-0">Average Area (sq ft)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="stat-icon mb-3">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <h3 class="text-primary">₹{{ stats.price_per_sqft|int|format_number }}</h3>
+                    <p class="text-muted mb-0">Avg Price/sq ft</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Price Distribution Plot -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Price Distribution</h5>
+                    <i class="bi bi-bar-chart"></i>
+                </div>
+                <div class="card-body">
+                    <div id="priceDistributionPlot" class="plot-container">
+                        {{ price_dist_plot|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Price vs Area Plot -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Price vs Area</h5>
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <div class="card-body">
+                    <div id="priceVsAreaPlot" class="plot-container">
+                        {{ price_vs_area_plot|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Location Analysis -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Price by Location</h5>
+                    <i class="bi bi-geo-alt"></i>
+                </div>
+                <div class="card-body">
+                    <div id="locationPricePlot" class="plot-container">
+                        {{ location_price_plot|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Property Type Analysis -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Price by Property Type</h5>
+                    <i class="bi bi-building"></i>
+                </div>
+                <div class="card-body">
+                    <div id="propertyTypePlot" class="plot-container">
+                        {{ property_type_plot|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Statistics -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Detailed Statistics</h5>
+                    <i class="bi bi-table"></i>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Median Price</td>
+                                    <td>₹{{ stats.median_price|int|format_number }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Price Range</td>
+                                    <td>₹{{ stats.min_price|int|format_number }} - ₹{{ stats.max_price|int|format_number }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Average Bedrooms</td>
+                                    <td>{{ "%.1f"|format(stats.average_bedrooms) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Average Bathrooms</td>
+                                    <td>{{ "%.1f"|format(stats.average_bathrooms) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.plot-container {
+    height: 400px;
+    width: 100%;
+}
+
+.stat-card {
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    background-color: #e9ecef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.stat-icon i {
+    font-size: 1.5rem;
+    color: #0d6efd;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    color: white;
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+}
+
+.hero-section h1 {
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: none;
+    padding: 1rem 1.5rem;
+}
+
+.card-header i {
+    font-size: 1.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .plot-container {
+        height: 300px;
+    }
+    
+    .stat-card {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add responsive behavior for plots
+    window.addEventListener('resize', function() {
+        const plotContainers = document.querySelectorAll('.plot-container');
+        plotContainers.forEach(container => {
+            if (container.querySelector('.js-plotly-plot')) {
+                Plotly.Plots.resize(container.querySelector('.js-plotly-plot'));
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

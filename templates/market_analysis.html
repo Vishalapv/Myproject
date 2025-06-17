@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Market Analysis{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Market Analysis</h1>
+    
+    <!-- Debug Information -->
+    <div class="alert alert-info mb-4" id="debug-info" style="display: none;">
+        <h5>Debug Information</h5>
+        <pre id="debug-data"></pre>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Properties</h5>
+                    <p class="card-text">{{ stats.total_properties|format_number }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Average Price</h5>
+                    <p class="card-text">₹{{ stats.average_price|format_number }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Average Area</h5>
+                    <p class="card-text">{{ stats.average_area|format_number }} sq ft</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Price per Sq Ft</h5>
+                    <p class="card-text">₹{{ stats.price_per_sqft|format_number }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Price Distribution</h5>
+                    <div class="chart-container" style="height: 400px;">
+                        {{ price_dist_plot|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Price vs Area</h5>
+                    <div class="chart-container" style="height: 400px;">
+                        {{ price_vs_area_plot|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Average Price by Location</h5>
+                    <div class="chart-container" style="height: 400px;">
+                        {{ location_price_plot|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Average Price by Property Type</h5>
+                    <div class="chart-container" style="height: 400px;">
+                        {{ property_type_plot|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %} 

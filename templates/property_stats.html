@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Property Statistics{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Property Statistics</h1>
+    
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Properties</h5>
+                    <p class="card-text" id="total-properties">Loading...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Average Price</h5>
+                    <p class="card-text" id="average-price">Loading...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Average Area</h5>
+                    <p class="card-text" id="average-area">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Price per Sq Ft</h5>
+                    <p class="card-text" id="price-per-sqft">Loading...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Minimum Price</h5>
+                    <p class="card-text" id="min-price">Loading...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Maximum Price</h5>
+                    <p class="card-text" id="max-price">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Price Distribution Plot -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Price Distribution</h5>
+                    <div id="price-distribution-plot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch property statistics
+    fetch('/property_stats')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update statistics
+                document.getElementById('total-properties').textContent = data.stats.total_properties.toLocaleString();
+                document.getElementById('average-price').textContent = '₹' + data.stats.average_price.toLocaleString();
+                document.getElementById('average-area').textContent = data.stats.average_area.toLocaleString() + ' sq ft';
+                document.getElementById('price-per-sqft').textContent = '₹' + data.stats.price_per_sqft.toLocaleString();
+                document.getElementById('min-price').textContent = '₹' + data.stats.min_price.toLocaleString();
+                document.getElementById('max-price').textContent = '₹' + data.stats.max_price.toLocaleString();
+
+                // Create plot
+                Plotly.newPlot('price-distribution-plot', data.plot.data, data.plot.layout);
+            } else {
+                console.error('Error fetching property statistics:', data.error);
+                alert('Error loading property statistics. Please try again later.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error loading property statistics. Please try again later.');
+        });
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}Property Map - Real Estate Price Predictor{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 mb-4">Property Map</h1>
+        <p class="lead mb-4">Explore properties across Chennai with interactive filters</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Map Column -->
+        <div class="col-md-8 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Interactive Property Map</h5>
+                    <i class="fas fa-map"></i>
+                </div>
+                <div class="card-body p-0">
+                    <div id="map" class="map-container">
+                        {{ map_html | safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters Column -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Filter Properties</h5>
+                    <i class="fas fa-filter"></i>
+                </div>
+                <div class="card-body">
+                    <form id="filterForm" class="needs-validation" novalidate>
+                        <!-- Price Range Filter -->
+                        <div class="mb-3">
+                            <label for="priceRange" class="form-label">Price Range (₹)</label>
+                            <select class="form-select" id="priceRange" name="priceRange">
+                                <option value="all">All Prices</option>
+                                <option value="0-10000000">Under ₹1 Crore</option>
+                                <option value="10000000-20000000">₹1-2 Crore</option>
+                                <option value="20000000-30000000">₹2-3 Crore</option>
+                                <option value="30000000-999999999">Above ₹3 Crore</option>
+                            </select>
+                        </div>
+
+                        <!-- Bedrooms Filter -->
+                        <div class="mb-3">
+                            <label for="bedrooms" class="form-label">Number of Bedrooms</label>
+                            <select class="form-select" id="bedrooms" name="bedrooms">
+                                <option value="all">All</option>
+                                <option value="2">2 Bedrooms</option>
+                                <option value="3">3 Bedrooms</option>
+                                <option value="4+">4+ Bedrooms</option>
+                            </select>
+                        </div>
+
+                        <!-- Property Type Filter -->
+                        <div class="mb-3">
+                            <label for="propertyType" class="form-label">Property Type</label>
+                            <select class="form-select" id="propertyType" name="propertyType">
+                                <option value="all">All Types</option>
+                                <option value="Apartment">Apartment</option>
+                                <option value="House">House</option>
+                            </select>
+                        </div>
+
+                        <!-- Location Filter -->
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <select class="form-select" id="location" name="location">
+                                <option value="all">All Locations</option>
+                                <option value="Adyar">Adyar</option>
+                                <option value="Anna Nagar">Anna Nagar</option>
+                                <option value="Besant Nagar">Besant Nagar</option>
+                                <option value="Kilpauk">Kilpauk</option>
+                                <option value="Mylapore">Mylapore</option>
+                                <option value="Nungambakkam">Nungambakkam</option>
+                                <option value="T Nagar">T Nagar</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            Apply Filters
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Property Statistics -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Map Statistics</h5>
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <h3 class="text-primary mt-2" id="totalProperties">0</h3>
+                                <p class="text-muted mb-0">Properties</p>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-rupee-sign"></i>
+                                </div>
+                                <h3 class="text-primary mt-2" id="avgPrice">₹0</h3>
+                                <p class="text-muted mb-0">Avg. Price</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.map-container {
+    height: 600px;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.stat-card {
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #e9ecef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.stat-icon i {
+    font-size: 1.2rem;
+    color: #0d6efd;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    color: white;
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+}
+
+.hero-section h1 {
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: none;
+    padding: 1rem 1.5rem;
+}
+
+.card-header i {
+    font-size: 1.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .map-container {
+        height: 400px;
+    }
+    
+    .stat-card {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 0
+        }).format(amount);
+    }
+
+    function updateStatistics() {
+        fetch('/market_stats')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('totalProperties').textContent = data.stats.total_properties;
+                    document.getElementById('avgPrice').textContent = formatCurrency(data.stats.average_price);
+                }
+            })
+            .catch(error => console.error('Error loading statistics:', error));
+    }
+
+    // Handle filter form submission
+    document.getElementById('filterForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const form = e.target;
+        const submitButton = form.querySelector('button[type="submit"]');
+        const spinner = submitButton.querySelector('.spinner-border');
+        
+        // Show loading state
+        submitButton.disabled = true;
+        spinner.classList.remove('d-none');
+        
+        // Get form data as JSON
+        const formData = {
+            priceRange: document.getElementById('priceRange').value,
+            bedrooms: document.getElementById('bedrooms').value,
+            propertyType: document.getElementById('propertyType').value,
+            location: document.getElementById('location').value
+        };
+        
+        // Send filter request
+        fetch('/filter_properties', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update map
+                document.getElementById('map').innerHTML = data.map_html;
+                
+                // Update statistics
+                document.getElementById('totalProperties').textContent = data.stats.total_properties;
+                document.getElementById('avgPrice').textContent = formatCurrency(data.stats.average_price);
+            } else {
+                console.error('Error filtering properties:', data.error);
+                alert('Error applying filters. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error applying filters. Please try again.');
+        })
+        .finally(() => {
+            // Hide loading state
+            submitButton.disabled = false;
+            spinner.classList.add('d-none');
+        });
+    });
+
+    // Initial statistics update
+    updateStatistics();
+});
+</script>
+{% endblock %} 

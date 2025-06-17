@@ -1,0 +1,207 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    padding-top: 20px;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    padding: 15px;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-primary {
+    padding: 10px 25px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.display-4 {
+    font-weight: 600;
+    color: #007bff !important;
+    margin-bottom: 10px;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.alert {
+    border-radius: 10px;
+}
+
+.navbar {
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.container {
+    max-width: 1200px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card {
+        margin: 10px;
+    }
+    
+    .btn-primary {
+        width: 100%;
+    }
+}
+
+/* Custom styles for Real Estate Price Predictor */
+
+/* Hero section */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 0;
+    margin-bottom: 50px;
+}
+
+/* Cards */
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-title {
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+/* Forms */
+.form-control, .form-select {
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: 1px solid #dee2e6;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-2px);
+}
+
+/* Map container */
+.map-container {
+    height: 600px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Plot containers */
+.plot-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Statistics cards */
+.stats-card {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.stats-card i {
+    font-size: 2rem;
+    color: #0d6efd;
+    margin-bottom: 1rem;
+}
+
+/* Navigation */
+.navbar-brand {
+    font-weight: 600;
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 8px 15px !important;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.nav-link:hover {
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+.nav-link i {
+    margin-right: 5px;
+}
+
+/* Footer */
+footer {
+    background-color: #212529;
+    color: white;
+    padding: 40px 0;
+    margin-top: auto;
+}
+
+footer h5 {
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+footer p {
+    color: #adb5bd;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 60px 0;
+    }
+    
+    .map-container {
+        height: 400px;
+    }
+    
+    .stats-card {
+        padding: 1rem;
+    }
+    
+    .card-text {
+        font-size: 1rem;
+    }
+} 
